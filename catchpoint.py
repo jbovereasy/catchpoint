@@ -6,8 +6,7 @@ class Catchpoint:
     def __init__(self, host='https://io.catchpoint.com/', api_url='ui/api/v1/'):
         self.host = host
         self.api_url = api_url
-        # self._token = False
-        self._token = 'scUoDLD/SZbahkAmHw9LtswNQqZ+kau6Ygc2qVX4Gnj92idpW4W0id7n8VU9u+aUUNqQ+sUGdGsY9uxBkVMMqqIvp+ahCW1ZNajVXAjYBsdRv7xLSuiskcjk0lA1/Cm+ov4wNT7Mkajr7aDOt1TbNgwcdQuzAyeYewOFRNU37wvzN76dgxoVNug2B2rwvoPGXGy6V/mXYWdAWgeaJDnxKGVQs7vgDI+zCHccdu/weM4kP2Jy'
+        self._token = False
         self._auth = False
         self.verbose = False
         self.content_type = "application/json"
