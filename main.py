@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
 import catchpoint
 
 cp = catchpoint.Get()
-print(cp.nodes())
+
+# print(cp.Products())
+# print(cp.Folders())
+print(cp.Tests())

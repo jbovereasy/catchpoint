@@ -1,12 +1,14 @@
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
-import os, requests, json, sys
+import os, requests, json, sys, time
+
+
 
 class Catchpoint:
     def __init__(self, host='https://io.catchpoint.com/', api_url='ui/api/v1/'):
         self.host = host
         self.api_url = api_url
-        self._token = False
+        self._token = None
         self._auth = False
         self.verbose = False
         self.content_type = "application/json"
@@ -40,14 +42,14 @@ class Catchpoint:
             print(f"KeyError: {err}")
     
 class Get(Catchpoint):
-    def assertions(self):
+    def Assertions(self):
         # if not self._auth:
         #     self._authorize()
         
         url = f"{self.host}{self.api_url}assertions"
         return self._make_requests(url)
 
-    def nodes(self):
+    def Nodes(self):
         # if not self._auth:
         #     self._authorize()
 
@@ -65,9 +67,55 @@ class Get(Catchpoint):
             except KeyError as err:
                 print(err)
     
-    # def product(self):
+    def Products(self):
+        # if not self._auth:
+        #     self._authorize()
 
+        url = f"{self.host}{self.api_url}products"
+        headers = {'Accept': self.content_type, 'Authorization': f'Bearer {self._token}'}
+
+        self._debug("Making request...")
+        r = requests.get(url, headers=headers)
+        products = r.json()['items']
+        products_id = []
+        with open('output/products.json', 'w', encoding='utf-8') as f:
+            for product in products:                
+                json.dump(product, f, ensure_ascii=False, indent=4)
+                products_id.append(product['id'])
+        return products_id
         
-        
+    def Folders(self):
+        # if not self._auth:
+        #     self._authorize()
+
+        product_id = self.Products()
+        folders_id = []
+
+        for folders in product_id:
+            try: 
+                # time.sleep(1)
+                url = f"{self.host}{self.api_url}folders?productId={folders}"
+                headers = {'Accept': self.content_type, 'Authorization': f'Bearer {self._token}'}
+
+                self._debug("Making request...")
+                r = requests.get(url, headers=headers)
+                folder = r.json()['items']
+
+                for folder_id in folder:
+                    with open('output/folders.json', 'a', encoding='utf-8') as f:
+                        json.dump(folder_id, f, ensure_ascii=False, indent=4)
+                        folders_id.append(folder_id['id'])
+                        print(folder_id['id'])
+                # print(folder)
+            except ValueError:
+                # print(f"{{\'id\'{folders}: \'no folder found\'}}")
+                pass
+
+    def Tests(self):
+        pass
+
+
+
+
 # cp = Get()
-# print(cp.assertions())
+# print(cp.Assertions())
